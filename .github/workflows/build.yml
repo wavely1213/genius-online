@@ -1,0 +1,37 @@
+# 지니어스 온라인 PC 클라이언트 — PR 은 시험 + 굽기만, 태그 `v*` 면 GitHub Releases 에 올린다(electron-updater 가 여기서 새 판을 받는다).
+name: build
+
+on:
+  pull_request:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: 굽기(PR — 올리지 않음)
+        if: github.event_name == 'pull_request'
+        run: npm run dist
+      - name: 굽고 올리기(태그)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: npm run release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GeniusOnline-Setup
+          path: |
+            release/GeniusOnline-Setup.exe
+            release/latest.yml
+          if-no-files-found: error
