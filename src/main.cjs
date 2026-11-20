@@ -12,6 +12,7 @@ const L = require('./lib/link.cjs');
 const { CH } = require('./lib/bridge-names.cjs');
 const { newVerifier, challengeOf } = require('./lib/verifier.cjs');
 const { startUpdates } = require('./updates.cjs');
+const { guardNavigation, guardPermissions } = require('./guard.cjs');
 
 const OFFLINE = path.join(__dirname, 'offline.html');
 const OFFLINE_URL = pathToFileURL(OFFLINE).href;
@@ -57,6 +58,7 @@ function takeLink(url) {
 function start() {
   registerProtocol();
   session.defaultSession.setUserAgent(L.clientUA(session.defaultSession.getUserAgent(), app.getVersion()));
+  guardPermissions(session.defaultSession);
 
   win = new BrowserWindow({
     width: 1280, height: 800, minWidth: 1024, minHeight: 640,
@@ -74,7 +76,7 @@ function start() {
     },
   });
   win.once('ready-to-show', () => win.show());
-  guardNavigation(win.webContents);
+  guardNavigation(win.webContents, OFFLINE_URL);
   wireBridge();
 
   // 사이트에 못 닿으면 껍데기 안의 한 장(「잠시 연결이 안 됩니다」 · 다시 시도)으로.
@@ -93,17 +95,6 @@ function start() {
   win.loadURL(L.START);
   takeLink(L.linkInArgv(process.argv));
   if (app.isPackaged) startUpdates((u) => win && win.webContents.send(CH.update, u));
-}
-
-/** 창 안 이동은 운영 사이트만 — 허용 목록의 https 는 바깥 브라우저로, 나머지는 버린다. 새 창은 안 연다. */
-function guardNavigation(wc) {
-  const outside = (url) => { if (L.canOpenOutside(url)) shell.openExternal(url); };
-  wc.on('will-navigate', (e, url) => {
-    if (url === OFFLINE_URL || L.canNavigate(url)) return;
-    e.preventDefault();
-    outside(url);
-  });
-  wc.setWindowOpenHandler(({ url }) => { outside(url); return { action: 'deny' }; });
 }
 
 /** 다리 — 우리 사이트(또는 껍데기 안 한 장)에서 온 부름만 받는다. */

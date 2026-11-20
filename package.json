@@ -17,8 +17,8 @@
     "electron-updater": "^6.8.11"
   },
   "devDependencies": {
-    "electron": "^33.4.11",
-    "electron-builder": "^25.1.8"
+    "electron": "^45.4.1",
+    "electron-builder": "^26.18.0"
   },
   "build": {
     "appId": "kr.mulgyeol.genius",
@@ -70,6 +70,14 @@
         "owner": "wavely1213",
         "repo": "genius-online"
       }
-    ]
+    ],
+    "electronFuses": {
+      "runAsNode": false,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true,
+      "enableCookieEncryption": true
+    }
   }
 }
