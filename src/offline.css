@@ -1,0 +1,8 @@
+/* 「잠시 연결이 안 됩니다」 한 장 — 사이트에 못 닿을 때 껍데기 안에서 보인다. */
+html, body { margin: 0; height: 100%; background: #0e0f12; color: #f2f2f2; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; }
+.bar { height: 36px; background: #0a0b0e; -webkit-app-region: drag; }
+main { display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100% - 36px); gap: 12px; text-align: center; }
+h1 { margin: 0; font-size: 24px; }
+p { margin: 0; color: #a8a8b0; font-size: 15px; }
+button { margin-top: 12px; padding: 12px 28px; border: 0; border-radius: 10px; background: #e8c15a; color: #111; font-size: 16px; font-weight: 700; cursor: pointer; }
+button:hover { filter: brightness(1.08); }

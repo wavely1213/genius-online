@@ -1,0 +1,83 @@
+{
+  "name": "genius-online",
+  "productName": "지니어스 온라인",
+  "version": "1.0.0",
+  "description": "지니어스 온라인 PC 클라이언트 — 운영 사이트를 띄우는 얇은 껍데기",
+  "author": "mulgyeol",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "src/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/*.test.cjs",
+    "dist": "electron-builder --win nsis --x64 --publish never",
+    "release": "electron-builder --win nsis --x64 --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
+  },
+  "devDependencies": {
+    "electron": "^45.4.1",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "kr.mulgyeol.genius",
+    "productName": "지니어스 온라인",
+    "executableName": "GeniusOnline",
+    "copyright": "© mulgyeol",
+    "files": [
+      "src/**",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "protocols": [
+      {
+        "name": "Genius Online",
+        "schemes": [
+          "genius-online"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "지니어스 온라인",
+      "language": "1042",
+      "installerLanguages": [
+        "ko_KR"
+      ],
+      "artifactName": "GeniusOnline-Setup.${ext}"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "wavely1213",
+        "repo": "genius-online"
+      }
+    ],
+    "electronFuses": {
+      "runAsNode": false,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true,
+      "enableCookieEncryption": true
+    }
+  }
+}
